@@ -3,6 +3,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 from skimage.feature import hog
 import skimage.io as io
+from skimage.util import view_as_blocks
 import pandas as pd
 import os
 from sklearn.preprocessing import LabelEncoder
@@ -30,6 +31,7 @@ class CardsDataset(Dataset):
     A PyTorch Dataset class specifically aimed at digesting and retrieving the images of the cards, together with their
     labels, which are also reliably encoded.
     """
+
     def __init__(self, csv_path: str, root_dir: str, transform: str, card_category: bool, label_encoder: LabelEncoder,
                  subset: str = 'train') -> None:
         """
@@ -69,12 +71,16 @@ class CardsDataset(Dataset):
         card_class = self.cards_table.iat[idx, 2] if self.card_category else self.cards_table.iat[idx, 3]
 
         if self.transform == 'hog':
-            representation = np.squeeze(hog(image, channel_axis=2, block_norm='L2', pixels_per_cell=(7, 7),
+            representation = np.squeeze(hog(image, channel_axis=2, block_norm='L2', pixels_per_cell=(4, 4),
                                             cells_per_block=(1, 1), feature_vector=False))
+            block_view = view_as_blocks(representation, (4, 4, 9))  # This is a view on the original array
+            block_view /= np.linalg.norm(
+                np.reshape(np.squeeze(block_view), (block_view.shape[0], block_view.shape[1], -1)), axis=2,
+                ord=2)[:, :, np.newaxis, np.newaxis, np.newaxis, np.newaxis]
+            representation = np.moveaxis(representation, 2, 0)  # channel first view, as required for PyTorch
         elif self.transform == 'rgb_hist':
-            representation, _ = np.histogramdd((np.reshape(image, (-1, 3))), bins=[np.linspace(0, 256, 6)]*3)
-            representation = (representation / math.prod(image.shape[0:2])).flatten()
-            pass
+            representation, _ = np.histogramdd((np.reshape(image, (-1, 3))), bins=[np.linspace(0, 256, 6)] * 3)
+            representation = (representation / representation.sum()).flatten()
         else:
             raise ValueError(f'There is no transformation function for \'{self.transform}\'')
 
@@ -83,7 +89,7 @@ class CardsDataset(Dataset):
 
 if __name__ == '__main__':
     training_hog = CardsDataset(csv_path=os.path.join('dataset_cards', 'cards.csv'), root_dir='dataset_cards',
-                                transform='rgb_hist', card_category=False,
+                                transform='hog', card_category=False,
                                 label_encoder=label_encoder_specific, subset='train')
     train_dataloader = DataLoader(training_hog, batch_size=16, shuffle=True)
     image_batch = next(iter(train_dataloader))
