@@ -30,7 +30,7 @@ model = torch.nn.Sequential(Conv2dReluPool(9, 16, 3, 3),  # Number of learned pa
                             torch.nn.Linear(100, 53),
                             torch.nn.Softmax(1))
 model.to(device)
-optimizer = torch.optim.SGD(model.parameters, weight_decay=0.01, lr=0.01)  # Weight decay is the lambda of L2 reg
+optimizer = torch.optim.SGD(model.parameters, weight_decay=0.01, lr=0.01)  # Weight decay regulates amount of L2 reg
 
 test = torch.tensor(np.ones((1, 9, 56, 56), dtype=np.float32), device=device)
 print(model(test))
