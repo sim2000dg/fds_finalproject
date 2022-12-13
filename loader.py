@@ -1,9 +1,6 @@
-import joblib
 import torch
 from torch.utils.data import Dataset, DataLoader
-from skimage.feature import hog
 import skimage.io as io
-from skimage.util import view_as_blocks
 import pandas as pd
 import os
 from sklearn.preprocessing import LabelEncoder
@@ -41,8 +38,7 @@ class CardsDataset(Dataset):
         :param root_dir: The root directory for the dataset.
         :param transform: Option between Histogram of Gradients ('hog') or Histogram of colors ('rgb_hist').
         Pass None in order to avoid transformations (normalization at pixel level is the only operation performed).
-        :param card_category: Whether the label refers to the card category (i.e. the suit) or to the specific card
-        itself.
+        :param card_category: Whether the label refers to the card category or to the specific card itself.
         :param label_encoder: The scikit-learn LabelEncoder object necessary to map the string labels to integers.
         :param subset: Choose between train ('train'), test ('test') and validation ('valid') dataset.
         """
@@ -72,11 +68,7 @@ class CardsDataset(Dataset):
         if self.transform == 'hog':
             representation = np.load(os.path.join(self.root_dir, 'hog',
                                                   self.cards_table.iat[idx, 1].split('.')[0] + '.npy'))
-            # block_view = view_as_blocks(representation, (4, 4, 9))  # This is a view on the original array
-            # block_view /= np.linalg.norm(
-            #     np.reshape(np.squeeze(block_view), (block_view.shape[0], block_view.shape[1], -1)), axis=2,
-            #     ord=2)[:, :, np.newaxis, np.newaxis, np.newaxis, np.newaxis] + 0.01
-            representation = np.moveaxis(representation, 2, 0)  # channel first view, as required for PyTorch
+            representation = np.moveaxis(representation, 2, 0)
         elif self.transform is None or self.transform == 'rgb_hist':
             img_path = os.path.join(self.root_dir, self.cards_table.iat[idx, 1])
             image = io.imread(img_path)
@@ -84,7 +76,8 @@ class CardsDataset(Dataset):
                 representation, _ = np.histogramdd((np.reshape(image, (-1, 3))), bins=[np.linspace(0, 256, 6)] * 3)
                 representation = (representation / representation.sum()).flatten()
             else:
-                representation = image/255.0
+                representation = np.moveaxis(image/255.0, 2, 0)
+
         else:
             raise ValueError(f'There is no transformation function for \'{self.transform}\'')
 

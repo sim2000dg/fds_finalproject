@@ -16,8 +16,8 @@ def img2hog(csv_path, col_img_path, rootdir) -> None:
     table = pd.read_csv(csv_path)
     for path in table[col_img_path]:
         image = io.imread(os.path.join('dataset_cards', path))
-        image = np.squeeze(hog(image, channel_axis=2, block_norm='L2', pixels_per_cell=(4, 4),
-                               cells_per_block=(1, 1), feature_vector=False))
+        image = np.squeeze(hog(image, channel_axis=2, block_norm='L2', pixels_per_cell=(4, 4), cells_per_block=(1, 1),
+                               feature_vector=False))
         np.save(os.path.join(rootdir, 'hog', path.split('.')[0])+'.npy', image)
 
 
