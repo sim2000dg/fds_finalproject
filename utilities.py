@@ -22,4 +22,4 @@ def img2hog(csv_path, col_img_path, rootdir) -> None:
 
 
 if __name__ == '__main__':
-    img2hog('dataset_cards/cards.csv', 'filepaths', 'dataset_cards')
+    img2hog(os.path.join('dataset_cards/cards.csv'), 'filepaths', 'dataset_cards')
