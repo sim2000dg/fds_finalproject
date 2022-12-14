@@ -83,13 +83,13 @@ if __name__ == '__main__':
         label_encoder_specific, label_encoder_category = pickle.load(file)
 
     training_hog = CardsDataset(csv_path=os.path.join('dataset_cards', 'cards.csv'), root_dir='dataset_cards',
-                                transform='hog', card_category=False,
+                                transform='hog', vector_hog=False, card_category=False,
                                 label_encoder=label_encoder_specific, subset='train')
     train_dataloader = DataLoader(training_hog, batch_size=32,
                                   shuffle=True, num_workers=5, persistent_workers=True)
 
     valid_hog = CardsDataset(csv_path=os.path.join('dataset_cards', 'cards.csv'), root_dir='dataset_cards',
-                             transform='hog', card_category=False,
+                             transform='hog', vector_hog=False, card_category=False,
                              label_encoder=label_encoder_specific, subset='valid')
 
     valid_dataloader = DataLoader(valid_hog, batch_size=256,

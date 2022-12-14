@@ -21,5 +21,15 @@ def img2hog(csv_path, col_img_path, rootdir) -> None:
         np.save(os.path.join(rootdir, 'hog', path.split('.')[0])+'.npy', image)
 
 
+def img2hog_vector(csv_path, col_img_path, rootdir):
+    if not os.path.isdir(os.path.join(rootdir, 'hog_vector')):
+        shutil.copytree(rootdir, os.path.join(rootdir, 'hog_vector'), ignore=file_filter)
+    table = pd.read_csv(csv_path)
+    for path in table[col_img_path]:
+        image = io.imread(os.path.join('dataset_cards', path))
+        image = hog(image, channel_axis=2, block_norm='L2', pixels_per_cell=(5, 5))
+        np.save(os.path.join(rootdir, 'hog_vector', path.split('.')[0])+'.npy', image)
+
+
 if __name__ == '__main__':
-    img2hog(os.path.join('dataset_cards/cards.csv'), 'filepaths', 'dataset_cards')
+    img2hog_vector(os.path.join('dataset_cards/cards.csv'), 'filepaths', 'dataset_cards')

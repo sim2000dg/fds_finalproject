@@ -29,7 +29,7 @@ class CardsDataset(Dataset):
     labels, which are also reliably encoded.
     """
 
-    def __init__(self, csv_path: str, root_dir: str, transform: str,
+    def __init__(self, csv_path: str, root_dir: str, transform: str, vector_hog: bool,
                  card_category: bool, label_encoder: LabelEncoder,
                  subset: str = 'train') -> None:
         """
@@ -38,6 +38,7 @@ class CardsDataset(Dataset):
         :param root_dir: The root directory for the dataset.
         :param transform: Option between Histogram of Gradients ('hog') or Histogram of colors ('rgb_hist').
         Pass None in order to avoid transformations (normalization at pixel level is the only operation performed).
+        :param vector_hog: if hog, whether to use vector representation or tensor representation.
         :param card_category: Whether the label refers to the card category or to the specific card itself.
         :param label_encoder: The scikit-learn LabelEncoder object necessary to map the string labels to integers.
         :param subset: Choose between train ('train'), test ('test') and validation ('valid') dataset.
@@ -53,6 +54,7 @@ class CardsDataset(Dataset):
                 label_encoder.transform(self.cards_table['labels']) if not card_category else \
                 label_encoder.transform(self.cards_table['card type'])
         self.root_dir = root_dir
+        self.vector_hog = vector_hog
         self.transform = transform
         self.card_category = card_category
 
@@ -65,10 +67,14 @@ class CardsDataset(Dataset):
 
         card_class = self.cards_table.iat[idx, 2] if not self.card_category else self.cards_table.iat[idx, 3]
 
-        if self.transform == 'hog':
+        if self.transform == 'hog' and not self.vector_hog:
             representation = np.load(os.path.join(self.root_dir, 'hog',
                                                   self.cards_table.iat[idx, 1].split('.')[0] + '.npy'))
             representation = np.moveaxis(representation, 2, 0)
+        elif self.transform == 'hog' and not self.vector_hog:
+            representation = np.load(os.path.join(self.root_dir, 'hog_vector',
+                                                  self.cards_table.iat[idx, 1].split('.')[0] + '.npy'))
+
         elif self.transform is None or self.transform == 'rgb_hist':
             img_path = os.path.join(self.root_dir, self.cards_table.iat[idx, 1])
             image = io.imread(img_path)
