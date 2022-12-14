@@ -71,7 +71,7 @@ class CardsDataset(Dataset):
             representation = np.load(os.path.join(self.root_dir, 'hog',
                                                   self.cards_table.iat[idx, 1].split('.')[0] + '.npy'))
             representation = np.moveaxis(representation, 2, 0)
-        elif self.transform == 'hog' and not self.vector_hog:
+        elif self.transform == 'hog' and self.vector_hog:
             representation = np.load(os.path.join(self.root_dir, 'hog_vector',
                                                   self.cards_table.iat[idx, 1].split('.')[0] + '.npy'))
 
