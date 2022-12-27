@@ -6,12 +6,32 @@ from pytorch_grad_cam.utils.image import show_cam_on_image
 import cv2
 import matplotlib.pyplot as plt
 import os
+import pickle
+
+
+# Read train data and plot training and validation loss
+
+with open('train_data', 'rb') as file:
+    history, val_loss = pickle.load(file)
+
+plt.gcf().set_size_inches(10, 10)
+plt.plot(np.arange(1, 120*100-48), history, label='Training', color='red')
+plt.title('Smoothed training loss and validation loss as training progresses',
+          size='xx-large', pad=20)
+plt.plot(np.arange(120, 120*100+1, 120), val_loss, 'o-', label='Validation',
+         color='blue', alpha=0.5, markersize=3)
+plt.xlabel('Batches', size='large')
+plt.ylabel('Cross-entropy', size='large')
+plt.legend()
+plt.show()
+
 
 # Define the model in the same way it was previously defined
+
 model = torchvision.models.vgg16(weights='DEFAULT')
 model.classifier[-2] = torch.nn.Linear(4096, 53)
 model.classifier[-1] = torch.nn.Softmax(1)
-model.classifier[2] = torch.nn.Dropout(p=0.1)
+model.classifier[2] = torch.nn.Dropout(p=0.2)
 
 # Load the state (the weights) of the model
 model.load_state_dict(torch.load('transfer_vgg_cards_conv_train_100.pt'))

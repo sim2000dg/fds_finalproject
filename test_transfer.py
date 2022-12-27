@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     model.classifier[-2] = torch.nn.Linear(4096, 53)  # Change linear (number and type of classes is different)
     model.classifier[-1] = torch.nn.Softmax(1)  # Add Softmax normalization
-    model.classifier[2] = torch.nn.Dropout(p=0.1)  # Moderate Dropout
+    model.classifier[2] = torch.nn.Dropout(p=0.2)  # Moderate Dropout
 
     # Load state of the model
     model.load_state_dict(torch.load('transfer_vgg_cards_conv_train_100.pt'))

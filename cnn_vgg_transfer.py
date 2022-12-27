@@ -6,7 +6,6 @@ import pickle
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from tqdm import tqdm
 
 if __name__ == '__main__':
 
@@ -14,11 +13,10 @@ if __name__ == '__main__':
         'mps' if torch.backends.mps.is_available() else 'cuda' if torch.cuda.is_available() else 'cpu')
 
     model = torchvision.models.vgg16(weights='DEFAULT')
-    # for param in model.features.parameters():
-    #     param.requires_grad = False
-    model.classifier[-2] = torch.nn.Linear(4096, 53)
-    model.classifier[-1] = torch.nn.Softmax(1)
-    model.classifier[2] = torch.nn.Dropout(p=0.1)
+
+    model.classifier[-2] = torch.nn.Linear(4096, 53)  # Change linear (number and type of classes is different)
+    model.classifier[-1] = torch.nn.Softmax(1)  # Add Softmax normalization
+    model.classifier[2] = torch.nn.Dropout(p=0.2)  # Moderate Dropout
 
     # model.load_state_dict(torch.load('transfer_vgg_cards.pt'))
 
@@ -30,16 +28,18 @@ if __name__ == '__main__':
     training_data = CardsDataset(csv_path=os.path.join('dataset_cards', 'cards.csv'), root_dir='dataset_cards',
                                  transform='random-augmentation', card_category=False,
                                  label_encoder=label_encoder_specific, subset='train')
-    train_dataloader = DataLoader(training_data, batch_size=32,
+    train_dataloader = DataLoader(training_data, batch_size=64,
                                   shuffle=True, num_workers=5, persistent_workers=True)
 
     # Do the same for validation set
-    valid_data = CardsDataset(csv_path=os.path.join('dataset_cards', 'cards.csv'), root_dir='dataset_cards',
+    valid_data = CardsDataset(csv_path=os.path.join('dataset_cards', 'cards.csv'),
+                              root_dir='dataset_cards',
                               transform=None, card_category=False,
                               label_encoder=label_encoder_specific, subset='valid')
 
     valid_dataloader = DataLoader(valid_data, batch_size=256,
-                                  shuffle=False, num_workers=2, persistent_workers=True)
+                                  shuffle=False, num_workers=2,
+                                  persistent_workers=True)
 
     # Build a dictionary containing the two dataloaders (this needs to be passed to the train function)
     dataloaders = {'train': train_dataloader,
@@ -60,5 +60,5 @@ if __name__ == '__main__':
     plt.show()
 
     # Save training data for analysis and visualization
-    with open('train_data') as file:
-        pickle.dump([model, history, val_loss], file)
+    with open('train_data', 'wb') as file:
+        pickle.dump([history, val_loss], file)
