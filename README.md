@@ -10,8 +10,7 @@ Repository for the final project of Fundamentals of Data Science/Data Science @S
 - `Name`: Anthony Ballerino `Matricola`: place `Email`: place <br>
 
 Let's say something about the content of this repo: 
-
--`transfer_lr`: This folder contains:
+- `transfer_lr`: This folder contains:
     - `cnn_vgg_transfer.py`, the module which actually triggers and handles the training of the CNN.
     - `utilities.py`, the module which contains the definition of the function handling the training and evaluation loop and the definition of the PyTorch Dataset class to handle data loading. 
     - `visualization.py`, the module which performs EigenCam visualization and loss plotting. 
