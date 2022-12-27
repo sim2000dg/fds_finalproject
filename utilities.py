@@ -141,13 +141,3 @@ def train(model_, epochs: int, learning_r: float, dataloaders: list[DataLoader, 
         print(f'Training loss: {sum(loss_history[-120:])/120}')
 
     return model_, loss_history, val_loss
-
-
-if __name__ == '__main__':
-    training_hog = CardsDataset(csv_path=os.path.join('dataset_cards', 'cards.csv'), root_dir='dataset_cards',
-                                transform='random-augmentation', card_category=False,
-                                label_encoder=label_encoder_specific, subset='train')
-    train_dataloader = DataLoader(training_hog, batch_size=64, shuffle=True)
-    start = time.time()
-    print(len(train_dataloader))
-    print(time.time() - start)

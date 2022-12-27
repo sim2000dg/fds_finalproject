@@ -9,20 +9,18 @@ import os
 import pickle
 
 
-# Read train data and plot training and validation loss
+# Read train data and plot training loss
 
 with open('train_data', 'rb') as file:
     history, val_loss = pickle.load(file)
 
 plt.gcf().set_size_inches(10, 10)
-plt.plot(np.arange(1, 120*100-48), history, label='Training', color='red')
-plt.title('Smoothed training loss and validation loss as training progresses',
+plt.plot(np.arange(1, 120*100-48), history, color='red')
+plt.title('Smoothed training loss as training progresses',
           size='xx-large', pad=20)
-plt.plot(np.arange(120, 120*100+1, 120), val_loss, 'o-', label='Validation',
-         color='blue', alpha=0.5, markersize=3)
 plt.xlabel('Batches', size='large')
 plt.ylabel('Cross-entropy', size='large')
-plt.legend()
+plt.grid()
 plt.show()
 
 

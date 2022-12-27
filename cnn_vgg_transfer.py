@@ -37,7 +37,7 @@ if __name__ == '__main__':
                               transform=None, card_category=False,
                               label_encoder=label_encoder_specific, subset='valid')
 
-    valid_dataloader = DataLoader(valid_data, batch_size=256,
+    valid_dataloader = DataLoader(valid_data, batch_size=265,
                                   shuffle=False, num_workers=2,
                                   persistent_workers=True)
 
