@@ -15,6 +15,6 @@ Let's say something about the content of this repo:
     - `utilities.py`, the module which contains the definition of the function handling the training and evaluation loop and the definition of the PyTorch Dataset class to handle data loading. 
     - `visualization.py`, the module which performs EigenCam visualization and loss plotting. 
     - `test_transfer.py`, the module which plots the confusion matrix and evaluates categorical accuracy on test data. 
-- hog...
-- hoc...
+- `notebook_hog.ipynb`: this notebook contains the code for the histogram of gradients trails.
+- `hoc`
 
