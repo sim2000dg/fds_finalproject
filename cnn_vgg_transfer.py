@@ -1,7 +1,7 @@
 import torch
 import torchvision
 from torch.utils.data import DataLoader
-from loader import CardsDataset, train
+from utilities import CardsDataset, train
 import pickle
 import os
 import numpy as np
@@ -49,15 +49,6 @@ if __name__ == '__main__':
     model, history, val_loss = train(model, 100, 1e-5, dataloaders, device)
     # Save the weights
     torch.save(model.state_dict(), 'transfer_vgg_cards_conv_train_100.pt')
-
-    # Running average of the loss to isolate trend
-    history = np.convolve(np.array(history), np.ones(50) / 50, mode='valid')
-    plt.plot(np.arange(1, len(history) + 1), history)
-    plt.title('Smoothed categorical cross-entropy loss w.r.t. training iterations\n'
-              'Unfrozen convolutional layers')
-    plt.xlabel('Batches')
-    plt.ylabel('Smoothed cross-entropy')
-    plt.show()
 
     # Save training data for analysis and visualization
     with open('train_data', 'wb') as file:

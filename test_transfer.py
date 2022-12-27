@@ -1,7 +1,7 @@
 import torch
 import torchvision
 from torch.utils.data import DataLoader
-from loader import CardsDataset
+from utilities import CardsDataset
 import pickle
 import os
 import matplotlib.pyplot as plt
