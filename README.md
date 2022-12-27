@@ -1,7 +1,7 @@
 # Softmax classification of French cards
 Repository for the final project of Fundamentals of Data Science/Data Science @Sapienza
 
-`AUTHORS`:
+**AUTHORS**:
 
 - `Name`: Iadisernia Giulia `Matricola`: 2065450 `Email`: iadisernia.2065450@studenti.uniroma1.it <br>
 - `Name`: Simone Di Gregorio `Matricola`: 2042237 `Email`: digregorio.2042237@studenti.uniroma1.it<br>
