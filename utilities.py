@@ -108,23 +108,23 @@ def train(model_, epochs: int, learning_r: float, dataloaders: list[DataLoader, 
     optimizer = torch.optim.Adam(model_.parameters(), lr=learning_r)  # Adam optimizer initialization
     loss_history = list()  # Init loss history
     val_loss = list()  # List of validation losses
-    for _ in tqdm(range(epochs), total=epochs):
+    for _ in tqdm(range(epochs), total=epochs, position=0, leave=True):
         for stage in ['train', 'valid']:
             if stage == 'train':
-                model_.train()  # Set train mode for model (For BatchNorm and Dropout)
+                model_.train()  # Set train mode for model (For Dropout)
                 for x_batch, y_batch in dataloaders[stage]:  # get dataloader for specific stage (train or validation)
                     x_batch, y_batch = x_batch.to(torch_device), y_batch.to(torch_device)  # Move to device tensors
                     y_pred = model_(x_batch)  # get pred from model
                     loss = torch.nn.functional.cross_entropy(y_pred, y_batch)  # compute categorical cross-entropy
                     loss_history.append(loss.item())  # append to loss_history
                     loss.backward()  # Call backward propagation on the loss
-                    optimizer.step()  # Move into parameter space
+                    optimizer.step()  # Move in the parameter space
                     optimizer.zero_grad()  # set to zero gradients
             else:
                 with torch.no_grad():  # we do not need gradients when calculating validation loss and accuracy
                     loss_singleval = 0  # Initialize to 0 the loss for the single iteration on the validation set
                     accuracy = 0
-                    model_.eval()
+                    model_.eval()  # Evaluation mode (for dropout)
                     for x_batch, y_batch in dataloaders[stage]:  # Access the dataloader for validation
                         # Move the tensors to right device
                         x_batch, y_batch = x_batch.to(torch_device), y_batch.to(torch_device)
@@ -138,7 +138,7 @@ def train(model_, epochs: int, learning_r: float, dataloaders: list[DataLoader, 
 
         print(f'Validation loss: {val_loss[-1]}')
         print(f'Accuracy on validation: {accuracy/len(dataloaders[stage])}')
-        print(f'Training loss: {sum(loss_history[-240:])/240}')
+        print(f'Training loss: {sum(loss_history[-120:])/120}')
 
     return model_, loss_history, val_loss
 
@@ -147,8 +147,7 @@ if __name__ == '__main__':
     training_hog = CardsDataset(csv_path=os.path.join('dataset_cards', 'cards.csv'), root_dir='dataset_cards',
                                 transform='random-augmentation', card_category=False,
                                 label_encoder=label_encoder_specific, subset='train')
-    train_dataloader = DataLoader(training_hog, batch_size=16, shuffle=True)
+    train_dataloader = DataLoader(training_hog, batch_size=64, shuffle=True)
     start = time.time()
-    for x in train_dataloader:
-        pass
+    print(len(train_dataloader))
     print(time.time() - start)
