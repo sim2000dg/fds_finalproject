@@ -50,6 +50,8 @@ if __name__ == '__main__':
     # Save the weights
     torch.save(model.state_dict(), 'transfer_vgg_cards_conv_train_100.pt')
 
+    # 1-D convolution with box filter to smooth
+    history = np.convolve(np.array(history), np.ones(50) / 50, mode='valid')
     # Save training data for analysis and visualization
     with open('train_data', 'wb') as file:
         pickle.dump([history, val_loss], file)
