@@ -5,9 +5,9 @@ Repository for the final project of Fundamentals of Data Science/Data Science @S
 
 - `Name`: Iadisernia Giulia `Matricola`: 2065450 `Email`: iadisernia.2065450@studenti.uniroma1.it <br>
 - `Name`: Simone Di Gregorio `Matricola`: 2042237 `Email`: digregorio.2042237@studenti.uniroma1.it<br>
-- `Name`: Federico Argilli `Matricola`: place `Email`: place <br>
-- `Name`: Giacomo Vittori `Matricola`: place `Email`: place <br>
-- `Name`: Anthony Ballerino `Matricola`: place `Email`: place <br>
+- `Name`: Federico Argilli `Matricola`: 1881520 `Email`: argilli.1881520@studenti.uniroma1.it
+- `Name`: Giacomo Vittori `Matricola`: 1811571 `Email`: vittori.1811571@studenti.uniroma1.it
+- `Name`: Anthony Ballerino `Matricola`: 2073280 `Email`: ballerino.2073280@studenti.uniroma1.it
 
 Let's say something about the content of this repo: 
 - `transfer_lr`: This folder contains:
