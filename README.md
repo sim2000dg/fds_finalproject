@@ -9,7 +9,7 @@ Repository for the final project of Fundamentals of Data Science/Data Science @S
 - `Name`: Giacomo Vittori `Matricola`: 1811571 `Email`: vittori.1811571@studenti.uniroma1.it
 - `Name`: Anthony Ballerino `Matricola`: 2073280 `Email`: ballerino.2073280@studenti.uniroma1.it
 
-`Dataset`: (https://www.kaggle.com/datasets/gpiosenka/cards-image-datasetclassification)[https://www.kaggle.com/datasets/gpiosenka/cards-image-datasetclassification]
+`Dataset`: https://www.kaggle.com/datasets/gpiosenka/cards-image-datasetclassification
 
 Let's say something about the content of this repo: 
 - `notebook_hog.ipynb`: this notebook contains all the code for the histogram of gradients and histogram of colors trials.
